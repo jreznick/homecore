@@ -2,6 +2,7 @@
 from flask import jsonify, request
 import threading
 
+from .app import app
 from .auditor import Auditor
 from .coupler import COUPLER
 from .model import MODEL_MAP
