@@ -84,3 +84,20 @@ class Auditor:
 
     def __str__(self):
         return f"<Auditor: {self.version}:{self.stamp}>"
+
+
+def update_status(batch_id, proc_id, message):
+    """
+    This function is called to log the conclusion of each process in the Process table
+    """
+    
+    db.session.query(Process). \
+        filter(Process.batch_id == batch_id, Process.proc_id == proc_id). \
+        update({Process.proc_status: message}, synchronize_session=False)
+    db.session.commit()
+    batch_check_query = db.session.query(Process). \
+        filter(Process.batch_id == batch_id, Process.proc_status == 'PENDING')
+    if len(batch_check_query.all()) == 0:
+        db.session.query(Batch).filter(Batch.batch_id == batch_id).\
+            update({Batch.batch_status: "COMPUTED"}, synchronize_session=False)
+        db.session.commit()
