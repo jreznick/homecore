@@ -11,6 +11,19 @@ from .model import (
 )
 
 
+def mint_transaction_key(auditor, row=None, foreign_record_id=None):
+    """
+    :param auditor: native Auditor class object for data warehousing
+    :param row: used when counting rows in tables
+    :param foreign_record_id: the primary key from record origin
+    """
+    ts = datetime.now()
+    proc_id = auditor.stamp(row, foreign_record_id)
+    transaction_key = auditor.stamp.transaction_key
+
+    return transaction_key, proc_id, auditor.batch_id, auditor.user, ts
+
+
 class AuditStamp:
     """
     The AuditStamp manages context at the task level.
