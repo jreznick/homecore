@@ -1,6 +1,6 @@
 # homecore
 
-These are some core utilities I lean on repeatedly here at home.
+These are some core utilities I wrote for myself because I lean on them repeatedly here at home.
 
 - `__auth__` database secrets file
 - `__env__` env file for setting absolute disk pathing independent of apps
