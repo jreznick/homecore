@@ -1,3 +1,4 @@
+#!/Anaconda3/python
 from selenium.webdriver.chrome.options import Options
 from selenium import webdriver
 from time import sleep
