@@ -3,6 +3,7 @@ from flask import jsonify, request
 import threading
 
 from .auditor import Auditor
+from .coupler import COUPLER
 from .model import MODEL_MAP
 from .__version__ import version
 
