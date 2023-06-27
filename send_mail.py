@@ -1,3 +1,4 @@
+#!/Anaconda3/python
 from datetime import datetime
 import os
 from sendgrid import SendGridAPIClient
