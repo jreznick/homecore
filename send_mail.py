@@ -4,7 +4,7 @@ import os
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 
-from .logging import mylogger
+from .logger import mylogger
 
 TO_EMAILS = []  # iterate over recipients
 FROM_EMAIL = ''  # there is only one sender address
