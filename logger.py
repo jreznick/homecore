@@ -1,5 +1,7 @@
 import logging
 
+formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+
 
 def make_logger(name: str):
     services_logger = setup_logger(__name__, F'/home/compadre/logs/{name}.log')
