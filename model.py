@@ -51,3 +51,9 @@ class ETLIDSource(db.Model, SerializerMixin):  # the source table for all primar
     user = db.Column(db.Text)
     version = db.Column(db.Text)
     id_created_ts = db.Column(db.DateTime)
+
+MODEL_MAP = {
+    "batch": Batch,
+    "etl_id_source": ETLIDSource,
+    "process": Process,
+}
