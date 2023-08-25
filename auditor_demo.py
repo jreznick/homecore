@@ -5,10 +5,19 @@ from sqlalchemy_serializer import SerializerMixin
 import sys
 
 from .logger import mylogger
+from .version import version
 
 app = Flask(__name__)
 app.config.from_object(Config)
 db = SQLAlchemy(app)
+
+
+class ETLIDSource(db.Model, SerializerMixin):  
+    __tablename__ = "etl_id_source"
+    etl_id = db.Column(db.BigInteger, primary_key=True)
+    user = db.Column(db.Text)
+    version = db.Column(db.Text)
+    id_created_ts = db.Column(db.DateTime)
 
 
 class Batch(db.Model, SerializerMixin):  
@@ -29,7 +38,7 @@ class Process(db.Model, SerializerMixin):
     foreign_record_id = db.Column(db.Text)
 
 
-def key_gen(user: str, version: str) -> int:
+def key_gen(user: str, version: str):
     staged_key_record = {
         "id_created_ts": datetime.now(),
         "user": user,
@@ -98,11 +107,9 @@ class Auditor:
 
     def __exit__(self, e_type, value, traceback):
         if e_type is not None:
-            error_msg = f"{e_type} : {value} : {traceback}"
-            mylogger.error(error_msg)
-            print(error_msg, file=sys.stderr)
+            print(f"{e_type} : {value} : {traceback}", file=sys.stderr)
+            # ToDo: error handler for your app
         else:
-            # ToDo: wrap QC/exit strategy on activities here
             db.session.query(Batch).filter(Batch.batch_id == self.batch_id).\
                 update(
                     {Batch.batch_status: "PENDING"}, 
@@ -116,7 +123,7 @@ class Auditor:
         return f"<Auditor: {self.version}:{self.stamp}>"
 
 
-def mint_transaction_key(auditor, row=None, foreign_record_id=None) -> tuple:
+def mint_transaction_key(auditor, row=None, foreign_record_id=None):
     ts = datetime.now()
     proc_id = auditor.stamp(row, foreign_record_id)
     transaction_key = auditor.stamp.transaction_key
@@ -150,17 +157,17 @@ def update_status(batch_id: int, proc_id: int, message: str):
 
 
 def my_custom_process(payload: dict, auditor):
-    # start by minting a transaction key
-    transaction_key, proc_id, batch_id, touched_ts = \
-        mint_transaction_key(auditor)
+    for record in payload['records']:
+        # start by minting a transaction key
+        transaction_key, proc_id, batch_id, touched_ts = \
+            mint_transaction_key(auditor)
+        # perform and validate any process here
 
-    ### perform and validate any custom process here ###
-    
-    # finish by updating your process status with a custom message
-    update_status(batch_id, proc_id, "CUSTOM PROCESS")
+        # finish by updating your process status with a custom message
+        update_status(batch_id, proc_id, f"Batch Action")
 
 
-def post(payload: dict, endpoint: str) -> dict:
+def post(payload: dict, endpoint: str):
     user = payload['user']
     # processor = COUPLER[endpoint]['processor']
     processor = my_custom_process
