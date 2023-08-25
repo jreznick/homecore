@@ -160,7 +160,8 @@ def my_custom_process(payload: dict, auditor):
 
 def post(payload: dict, endpoint: str) -> dict:
     user = payload['user']
-    processor = COUPLER[endpoint]['processor']
+    # processor = COUPLER[endpoint]['processor']
+    processor = my_custom_process
     with Auditor(user, version, endpoint) as job_auditor:
         thread = threading.Thread(
             target=processor,
