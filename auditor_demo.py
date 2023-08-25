@@ -154,6 +154,8 @@ def my_custom_process(payload: dict, auditor):
     transaction_key, proc_id, batch_id, touched_ts = \
         mint_transaction_key(auditor)
 
+    ### perform and validate any custom process here ###
+    
     # finish by updating your process status with a custom message
     update_status(batch_id, proc_id, "CUSTOM PROCESS")
 
