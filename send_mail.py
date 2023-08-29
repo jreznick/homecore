@@ -24,7 +24,8 @@ def send_email(mylogger: object, body: str):
             from_email=FROM_EMAIL,
             to_emails=TO_EMAILS,
             subject=subject,
-            html_content=body)
+            html_content=body
+        )
         sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
         try:
             response = sg.send(message)
