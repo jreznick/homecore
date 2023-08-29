@@ -10,16 +10,16 @@ TO_EMAILS = []  # iterate over recipients
 FROM_EMAIL = ''  # there is only one sender address
 
 
-def send_email(mylogger: object, body: str):
+def send_email(body: str, subject_root: str):
   """
-  :param mylogger: an application logger
   :param body: your email message body, containing HTML
+  :param subject_root: your email subject text
   """
     if body is not None:
         now = datetime.now()
         date = now.strftime("%Y-%m-%d")
         time = now.strftime("%H:%M")
-        subject = f'-{date}-{time}'  # set custom email subject here
+        subject = f'{subject_root}-{date}-{time}'
         message = Mail(
             from_email=FROM_EMAIL,
             to_emails=TO_EMAILS,
