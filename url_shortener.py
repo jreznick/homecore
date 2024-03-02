@@ -143,7 +143,7 @@ def token_post_url(url_key: str, member_id: int):
     token_url = f'{url_key}?source={member_id}'
     key = create_random_key(8)
     while get_db_url_by_key(key):
-        key = create_random_key()
+        key = create_random_key(8)
     url = get_db_url_by_key(key)
     staged_url_record = {
         'key': key,
